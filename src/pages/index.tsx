@@ -1,5 +1,7 @@
 import Image from 'next/image';
 
+import Dashboard from '../components/Dashboard';
+
 import styles from '../styles/Home.module.scss';
 
 export default function Home() {
@@ -12,8 +14,11 @@ export default function Home() {
           layout="fill"
           objectFit="cover"
           quality={100}
-      />
-    </div>
+        />
+      </div>
+      <div className={styles.wrapper}>
+        <Dashboard />
+      </div>
     </>
   );
 }
