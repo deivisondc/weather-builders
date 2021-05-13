@@ -1,0 +1,30 @@
+.section {
+  width: 100%;
+  max-width: 400px;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+  background-color: rgba(251, 251, 251, 0.75);
+  border-top-left-radius: 1.5rem;
+  overflow: auto;
+}
+
+.subsection {
+  padding: 1.5rem;
+
+  & + section {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+  }
+
+  h3 {
+    color: #222;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 0;
+    margin-bottom: 1.5rem;
+  }
+}
