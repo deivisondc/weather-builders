@@ -1,0 +1,20 @@
+.table {
+  width: 100%;
+  // background: red;
+
+  td {
+    padding: .5rem 0;
+    color: #222;
+    opacity: 0.5;
+    font-size: 1rem;
+  }
+
+  td:last-of-type {
+    color: #222;
+    opacity: 1;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: right;
+  }
+
+}
