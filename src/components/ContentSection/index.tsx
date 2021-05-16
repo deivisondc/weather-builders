@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useState, useEffect } from 'react';
 
 import { format, fromUnixTime } from 'date-fns';
 
@@ -10,47 +10,30 @@ import Chart from '../Chart';
 import styles from './styles.module.scss';
 
 export default function ContentSection() {
-  const { isFetching, weatherData } = useWeather();
+  const { weatherData } = useWeather();
+  const [chartData, setChartData] = useState([]);
+  const [chartCategories, setChartCategories] = useState([]);
+
+  useEffect(() => {
+    setChartData(weatherData.current.temperatures.map(data => data.temp));
+    setChartCategories(
+      weatherData.current.temperatures.map(data =>
+        format(fromUnixTime(data.dt), 'HH:mm'),
+      ),
+    );
+  }, [weatherData]);
 
   const weatherDetailsData = [
-    { label: 'Clouds', value: !isFetching && weatherData.current.clouds },
-    { label: 'Preciptation', value: !isFetching && weatherData.current.pop },
-    { label: 'Humidity', value: !isFetching && weatherData.current.humidity },
-    { label: 'Wind', value: !isFetching && weatherData.current.wind },
+    { label: 'Clouds', value: weatherData.current.clouds },
+    { label: 'Preciptation', value: weatherData.current.pop },
+    { label: 'Humidity', value: weatherData.current.humidity },
+    { label: 'Wind', value: weatherData.current.wind },
   ];
 
-  const forecastData = !isFetching
-    ? weatherData.forecast.map(data => ({
-        label: format(fromUnixTime(data.dt), 'iiii'),
-        value: data.temp,
-      }))
-    : [];
-
-  const chartData = useMemo(
-    () =>
-      !isFetching
-        ? weatherData.current.temperatures.map(data => data.temp)
-        : [],
-    [isFetching, weatherData],
-  );
-
-  const chartCategories = useMemo(
-    () =>
-      !isFetching
-        ? weatherData.current.temperatures.map(data =>
-            format(fromUnixTime(data.dt), 'HH:mm'),
-          )
-        : [],
-    [isFetching, weatherData],
-  );
-
-  const Test = useMemo(() => {
-    return <Chart data={chartData} categories={chartCategories} height="165" />;
-  }, [chartData, chartCategories]);
-
-  if (isFetching) {
-    return null;
-  }
+  const forecastData = weatherData.forecast.map(data => ({
+    label: format(fromUnixTime(data.dt), 'iiii'),
+    value: data.temp,
+  }));
 
   return (
     <section className={styles.section}>
@@ -65,7 +48,7 @@ export default function ContentSection() {
         <section className={styles.subsection}>
           <h3>Temperature</h3>
 
-          {Test}
+          <Chart data={chartData} categories={chartCategories} height="165" />
         </section>
         <section className={styles.subsection}>
           <h3>Next days</h3>
