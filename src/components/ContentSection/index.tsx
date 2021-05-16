@@ -15,12 +15,14 @@ export default function ContentSection() {
   const [chartCategories, setChartCategories] = useState([]);
 
   useEffect(() => {
-    setChartData(weatherData.current.temperatures.map(data => data.temp));
-    setChartCategories(
-      weatherData.current.temperatures.map(data =>
-        format(fromUnixTime(data.dt), 'HH:mm'),
-      ),
-    );
+    if (weatherData.current.temperatures) {
+      setChartData(weatherData.current.temperatures.map(data => data.temp));
+      setChartCategories(
+        weatherData.current.temperatures.map(data =>
+          format(fromUnixTime(data.dt), 'HH:mm'),
+        ),
+      );
+    }
   }, [weatherData]);
 
   const weatherDetailsData = [
@@ -36,7 +38,7 @@ export default function ContentSection() {
   }));
 
   return (
-    <section className={styles.section}>
+    <section data-testid="content-section-test" className={styles.section}>
       <Header />
 
       <div className={styles.content}>

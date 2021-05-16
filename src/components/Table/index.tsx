@@ -9,7 +9,7 @@ interface TableProps {
 
 export default function Table({ data }: TableProps) {
   return (
-    <table className={styles.table}>
+    <table data-testid="table-test" className={styles.table}>
       <tbody>
         {data.map(el => (
           <tr key={el.label}>

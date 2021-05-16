@@ -2,7 +2,7 @@ import { getHours } from 'date-fns';
 
 function isDaytime() {
   const hour = getHours(new Date());
-  return hour >= 6 && hour <= 18;
+  return hour >= 6 && hour < 18;
 }
 
 export function getLogo() {

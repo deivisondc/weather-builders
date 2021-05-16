@@ -10,7 +10,7 @@ interface LoadingModalProps {
 
 export default function LoadingModal({ isOpen }: LoadingModalProps) {
   return (
-    <GlassModal square isOpen={isOpen}>
+    <GlassModal testId="loadingModal-test" square isOpen={isOpen}>
       <VscLoading className={styles.rotatingIcon} size={48} />
     </GlassModal>
   );

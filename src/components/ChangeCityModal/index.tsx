@@ -1,5 +1,4 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import Modal from 'react-modal';
 import { FiCheck, FiX } from 'react-icons/fi';
 
 import { useWeather } from '../../hooks/Weather';
@@ -8,8 +7,6 @@ import GlassModal from '../GlassModal';
 import Button from '../Button';
 
 import styles from './styles.module.scss';
-
-Modal.setAppElement('#__next');
 
 interface ChangeCityModalProps {
   isOpen: boolean;
@@ -47,6 +44,7 @@ export default function ChangeCityModal({ isOpen }: ChangeCityModalProps) {
 
   return (
     <GlassModal
+      testId="changeCityModal-test"
       square={false}
       isOpen={isOpen}
       onRequestClose={handleRequestClose}

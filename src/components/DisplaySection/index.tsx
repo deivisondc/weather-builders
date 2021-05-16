@@ -15,7 +15,7 @@ export default function DisplaySection() {
   const [subtitle] = useState("Don't expect to see the sun");
 
   return (
-    <section className={styles.section}>
+    <section data-testid="display-section-test" className={styles.section}>
       <img src={getLogo()} alt="Platform Builers logo" />
 
       <div className={styles.content}>
