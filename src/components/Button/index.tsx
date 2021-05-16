@@ -1,15 +1,14 @@
-import { ReactNode } from 'react';
+import { ButtonHTMLAttributes } from 'react';
 
 import styles from './styles.module.scss';
 
-interface ButtonProps {
-  children: ReactNode;
-}
-
-export default function Button({ children }: ButtonProps) {
+export default function Button({
+  children,
+  ...rest
+}: ButtonHTMLAttributes<HTMLButtonElement>) {
   return (
-    <div>
-      <button type="button" className={styles.outline}>
+    <div className={styles.container}>
+      <button type="button" className={styles.outline} {...rest}>
         {children}
       </button>
     </div>
