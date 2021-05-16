@@ -6,8 +6,10 @@ import styles from './styles.module.scss';
 export default function Dashboard() {
   return (
     <div className={styles.content}>
-      <DisplaySection />
-      <ContentSection />
+      <div className={styles.scrollableContainer}>
+        <DisplaySection />
+        <ContentSection />
+      </div>
     </div>
   );
 }

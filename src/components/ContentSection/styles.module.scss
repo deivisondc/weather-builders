@@ -4,6 +4,10 @@
 
   display: flex;
   flex-direction: column;
+
+  @media screen and (max-width: 920px) {
+    max-width: none;
+  }
 }
 
 .content {
