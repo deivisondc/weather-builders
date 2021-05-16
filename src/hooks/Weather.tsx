@@ -7,6 +7,8 @@ import {
 } from 'react';
 import { isBefore } from 'date-fns';
 
+import ChangeCityModal from '../components/ChangeCityModal';
+import LoadingModal from '../components/LoadingModal';
 import api from '../services/api';
 
 interface WeatherProviderProps {
@@ -41,8 +43,10 @@ interface WeatherData {
 interface WeatherContextData {
   location: string;
   isFetching: boolean;
+  hasError: boolean;
   weatherData: WeatherData;
-  fetchWeatherData: () => void;
+  fetchWeatherData: (location: string) => Promise<void>;
+  toggleModal: () => void;
 }
 
 const WeatherContext = createContext<WeatherContextData>(
@@ -53,18 +57,23 @@ export const WeatherProvider: React.FC = ({
   children,
 }: WeatherProviderProps) => {
   const [isFetching, setIsFetching] = useState(true);
-  const [location, setLocation] = useState('Bauru');
-  const [weatherData, setWeatherData] = useState({} as WeatherData);
+  const [hasError, setHasError] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const fetchWeatherData = useCallback(async () => {
+  const toggleModal = useCallback(() => {
+    setIsModalOpen(!isModalOpen);
+  }, [isModalOpen]);
+
+  const fetchWeatherData = useCallback(async location => {
+    try {
     if (location) {
-      try {
+        setIsFetching(true);
         const paramsWeather = {
           q: location,
           appid: process.env.NEXT_PUBLIC_API_KEY,
           units: 'metric',
         };
-        // const requests = [
+
         const weatherResponse = await api.get(`weather`, {
           params: paramsWeather,
         });
@@ -106,20 +115,29 @@ export const WeatherProvider: React.FC = ({
             temp: `${Math.round(forecastData.temp.day)}°`,
           })),
         });
-
+      }
+    } catch (err) {
+      setHasError(true);
         setIsFetching(false);
-      } catch (err) {
-        console.error(err);
-        setWeatherData({} as WeatherData);
+    }
+  }, []);
       }
     }
   }, [location]);
 
   return (
     <WeatherContext.Provider
-      value={{ isFetching, location, weatherData, fetchWeatherData }}
+      value={{
+        isFetching,
+        hasError,
+        fetchWeatherData,
+        toggleModal,
+      }}
     >
       {children}
+
+      <ChangeCityModal isOpen={!isFetching && isModalOpen} />
+      <LoadingModal isOpen={isFetching} />
     </WeatherContext.Provider>
   );
 };
