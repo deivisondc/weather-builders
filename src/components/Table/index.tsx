@@ -12,7 +12,7 @@ export default function Table({ data }: TableProps) {
     <table className={styles.table}>
       <tbody>
         {data.map(el => (
-          <tr>
+          <tr key={el.label}>
             <td>{el.label}</td>
             <td>{el.value}</td>
           </tr>
