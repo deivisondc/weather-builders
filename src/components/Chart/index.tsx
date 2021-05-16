@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 
 import baseConfig from './config';
@@ -19,11 +19,16 @@ export default function Chart({
   height,
   ...rest
 }: ChartProps) {
-  const [series] = useState([{ name: 'temp', data }]);
-  const [options] = useState({
-    ...baseConfig,
-    xaxis: { ...baseConfig.xaxis, categories },
-  });
+  const [series, setSeries] = useState([]);
+  const [options, setOptions] = useState({});
+
+  useEffect(() => {
+    setSeries([{ name: 'temp', data }]);
+    setOptions({
+      ...baseConfig,
+      xaxis: { ...baseConfig.xaxis, categories },
+    });
+  }, [data, categories]);
 
   return (
     <ApexChart
