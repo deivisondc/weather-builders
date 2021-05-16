@@ -42,4 +42,13 @@
     font-size: 1rem;
     font-weight: 600;
   }
+
+  div {
+    display: flex;
+    align-items: center;
+
+    p {
+      margin-right: 1rem;
+    }
+  }
 }

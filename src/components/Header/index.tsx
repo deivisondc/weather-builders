@@ -1,18 +1,19 @@
+import { useWeather } from '../../hooks/Weather';
 import Button from '../Button';
 
 import styles from './styles.module.scss';
 
 export default function Header() {
-  const city = 'Bauru';
+  const { weatherData, toggleModal } = useWeather();
 
   return (
     <section className={styles.section}>
       <div>
         <span>City</span>
-        <h2>{city}</h2>
+        <h2>{weatherData.location}</h2>
       </div>
 
-      <Button>change</Button>
+      <Button onClick={toggleModal}>change</Button>
     </section>
   );
 }

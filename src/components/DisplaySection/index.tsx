@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { format } from 'date-fns';
 
 import { useWeather } from '../../hooks/Weather';
 import Button from '../Button';
@@ -23,9 +24,11 @@ export default function DisplaySection() {
       </div>
 
       <div className={styles.footer}>
-        <p>Bauru, Brazil</p>
-
-        <Button>change</Button>
+        <p>{format(Date.now(), 'iiii, dd MMM yyyy')}</p>
+        <div>
+          <p>{weatherData.location}</p>
+          <Button onClick={toggleModal}>change</Button>
+        </div>
       </div>
     </section>
   );
