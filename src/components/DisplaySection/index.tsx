@@ -4,18 +4,22 @@ import { format } from 'date-fns';
 import { useWeather } from '../../hooks/Weather';
 import Button from '../Button';
 
+import { getLogo } from '../../utils/imageMapper';
+
 import styles from './styles.module.scss';
 
 export default function DisplaySection() {
-  const { isFetching, weatherData } = useWeather();
+  const { weatherData, toggleModal } = useWeather();
 
   const [title] = useState('Today is so cloudy');
   const [subtitle] = useState("Don't expect to see the sun");
 
   return (
     <section className={styles.section}>
+      <img src={getLogo()} alt="Platform Builers logo" />
+
       <div className={styles.content}>
-        <h2>{!isFetching && weatherData.current.temp}</h2>
+        <h2>{weatherData.current.temp}</h2>
 
         <div>
           <p>{title}</p>
