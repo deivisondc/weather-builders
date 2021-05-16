@@ -1,6 +1,7 @@
 import {
   ReactNode,
   useState,
+  useEffect,
   useCallback,
   useContext,
   createContext,
@@ -9,6 +10,9 @@ import { isBefore } from 'date-fns';
 
 import ChangeCityModal from '../components/ChangeCityModal';
 import LoadingModal from '../components/LoadingModal';
+
+import { getImage } from '../utils/imageMapper';
+
 import api from '../services/api';
 
 interface WeatherProviderProps {
@@ -36,17 +40,21 @@ interface CurrentWeatherData {
 }
 
 interface WeatherData {
+  location: string;
+  backgroundImage: string;
   current: CurrentWeatherData;
   forecast: ForecastData[];
 }
 
 interface WeatherContextData {
-  location: string;
   isFetching: boolean;
   hasError: boolean;
   weatherData: WeatherData;
+  commitWeatherData: () => void;
   fetchWeatherData: (location: string) => Promise<void>;
   toggleModal: () => void;
+  setIsLoadingBackground: (value: boolean) => void;
+  backgroundImage: string;
 }
 
 const WeatherContext = createContext<WeatherContextData>(
@@ -57,16 +65,40 @@ export const WeatherProvider: React.FC = ({
   children,
 }: WeatherProviderProps) => {
   const [isFetching, setIsFetching] = useState(true);
+  const [isLoadingBackground, setIsLoadingBackground] = useState(false);
   const [hasError, setHasError] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [backgroundImage, setBackgroundImage] = useState('');
+  const [tempWeatherData, setTempWeatherData] = useState({} as WeatherData);
+  const [weatherData, setWeatherData] = useState({
+    location: '',
+    backgroundImage: '',
+    current: {
+      main: '',
+      temp: `0°`,
+      humidity: `0%`,
+      wind: `0 km/h`,
+      clouds: `0%`,
+      pop: `0%`,
+      temperatures: [],
+    },
+    forecast: [],
+  } as WeatherData);
 
   const toggleModal = useCallback(() => {
     setIsModalOpen(!isModalOpen);
   }, [isModalOpen]);
 
+  const commitWeatherData = useCallback(() => {
+    setWeatherData(tempWeatherData);
+    setIsFetching(false);
+    setHasError(false);
+    setIsModalOpen(false);
+  }, [tempWeatherData]);
+
   const fetchWeatherData = useCallback(async location => {
     try {
-    if (location) {
+      if (location) {
         setIsFetching(true);
         const paramsWeather = {
           q: location,
@@ -93,15 +125,22 @@ export const WeatherProvider: React.FC = ({
         const { data } = consolidatedWeatherResponse;
 
         const isDailyForecastOld = isBefore(data.daily[0].dt, Date.now());
+        const newBackgroundImage = getImage(
+          weatherResponse.data.weather[0].main,
+        );
 
-        setWeatherData({
+        setTempWeatherData({
+          location: `${weatherResponse.data.name}`,
+          backgroundImage: newBackgroundImage,
           current: {
             main: `${data.current.weather[0].main}`,
             temp: `${Math.round(data.current.temp)}°`,
-            humidity: `${data.current.humidity}%`,
+            humidity: `${Math.round(data.current.humidity)}%`,
             wind: `${Math.round(data.current.wind_speed)} km/h`,
-            clouds: `${data.current.clouds}%`,
-            pop: `${data.daily[isDailyForecastOld ? 1 : 0].pop * 100}%`,
+            clouds: `${Math.round(data.current.clouds)}%`,
+            pop: `${Math.round(
+              data.daily[isDailyForecastOld ? 1 : 0].pop * 100,
+            )}%`,
             temperatures: data.hourly
               .slice(1, 14)
               .filter((_, index) => index % 2 === 0)
@@ -118,20 +157,37 @@ export const WeatherProvider: React.FC = ({
       }
     } catch (err) {
       setHasError(true);
-        setIsFetching(false);
+      setIsFetching(false);
     }
   }, []);
+
+  useEffect(() => {
+    if (!isLoadingBackground && tempWeatherData.location) {
+      if (backgroundImage !== tempWeatherData.backgroundImage) {
+        setBackgroundImage(tempWeatherData.backgroundImage);
+        setIsLoadingBackground(true);
+      } else {
+        commitWeatherData();
       }
     }
-  }, [location]);
+  }, [
+    backgroundImage,
+    tempWeatherData,
+    commitWeatherData,
+    isLoadingBackground,
+  ]);
 
   return (
     <WeatherContext.Provider
       value={{
         isFetching,
         hasError,
+        weatherData,
         fetchWeatherData,
         toggleModal,
+        backgroundImage,
+        commitWeatherData,
+        setIsLoadingBackground,
       }}
     >
       {children}

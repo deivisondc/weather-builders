@@ -7,26 +7,40 @@ import Dashboard from '../components/Dashboard';
 import styles from '../styles/Home.module.scss';
 
 export default function Home() {
-  const { fetchWeatherData } = useWeather();
+  const {
+    setIsLoadingBackground,
+    fetchWeatherData,
+    commitWeatherData,
+    backgroundImage,
+  } = useWeather();
 
   useEffect(() => {
-    fetchWeatherData();
+    fetchWeatherData('São Paulo');
   }, [fetchWeatherData]);
 
   return (
     <>
-      <div className={styles.bgWrap}>
-        <Image
-          alt="Background"
-          src="/images/Cloudy.jpg"
-          layout="fill"
-          objectFit="cover"
-          quality={100}
-        />
-      </div>
-      <div className={styles.wrapper}>
-        <Dashboard />
-      </div>
+      {backgroundImage && (
+        <>
+          <div className={styles.bgWrap}>
+            <Image
+              alt="Background"
+              src={`/images/${backgroundImage}`}
+              layout="fill"
+              objectFit="cover"
+              quality={100}
+              priority
+              onLoad={() => {
+                commitWeatherData();
+                setIsLoadingBackground(false);
+              }}
+            />
+          </div>
+          <div className={styles.wrapper}>
+            <Dashboard />
+          </div>
+        </>
+      )}
     </>
   );
 }
