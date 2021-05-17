@@ -47,7 +47,6 @@ interface WeatherData {
 }
 
 interface WeatherContextData {
-  isFetching: boolean;
   hasError: boolean;
   weatherData: WeatherData;
   commitWeatherData: () => void;
@@ -180,7 +179,6 @@ export const WeatherProvider: React.FC = ({
   return (
     <WeatherContext.Provider
       value={{
-        isFetching,
         hasError,
         weatherData,
         fetchWeatherData,
