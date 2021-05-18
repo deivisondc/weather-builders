@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import Head from 'next/head';
 import Image from 'next/image';
 
 import { useWeather } from '../hooks/Weather';
@@ -12,6 +13,7 @@ export default function Home() {
     fetchWeatherData,
     commitWeatherData,
     backgroundImage,
+    weatherData,
   } = useWeather();
 
   useEffect(() => {
@@ -20,6 +22,11 @@ export default function Home() {
 
   return (
     <>
+      <Head>
+        <title>
+          Weather | {weatherData.location} ({weatherData.current.temp}){' '}
+        </title>
+      </Head>
       {backgroundImage && (
         <>
           <div className={styles.bgWrap}>
