@@ -13,6 +13,39 @@ export function getLogo() {
   return 'https://platformbuilders.io/assets/images/logo-bc.svg';
 }
 
+export function getImageText(weather: string) {
+  const texts = {
+    clouds: {
+      title: 'Today is so cloudy',
+      subtitle: `Don't expect to see the ${
+        isDaytime() ? 'sun' : 'stars'
+      } today`,
+    },
+    snow: {
+      title: 'Today is snowing',
+      subtitle: 'Wrap up before leaving home',
+    },
+    thunderstorm: {
+      title: 'Today is raining',
+      subtitle: 'Stay inside if possible',
+    },
+    drizzle: {
+      title: 'Today is raining',
+      subtitle: 'Stay inside if possible',
+    },
+    rain: {
+      title: 'Today is raining',
+      subtitle: 'Stay inside if possible',
+    },
+    clear: {
+      title: 'Today the sky is clear',
+      subtitle: 'Good oportunity to go out',
+    },
+  };
+
+  return texts[weather.toLowerCase()] || texts.clear;
+}
+
 export function getImage(weather: string) {
   const availableImages = {
     clouds: `Cloudy.jpg`,

@@ -4,15 +4,12 @@ import { format } from 'date-fns';
 import { useWeather } from '../../hooks/Weather';
 import Button from '../Button';
 
-import { getLogo } from '../../utils/imageMapper';
+import { getLogo, getImageText } from '../../utils/imageMapper';
 
 import styles from './styles.module.scss';
 
 export default function DisplaySection() {
   const { weatherData, toggleModal } = useWeather();
-
-  const [title] = useState('Today is so cloudy');
-  const [subtitle] = useState("Don't expect to see the sun");
 
   return (
     <section data-testid="display-section-test" className={styles.section}>
@@ -22,8 +19,8 @@ export default function DisplaySection() {
         <h2>{weatherData.current.temp}</h2>
 
         <div>
-          <p>{title}</p>
-          <p>{subtitle}</p>
+          <p>{getImageText(weatherData.current.main).title}</p>
+          <p>{getImageText(weatherData.current.main).subtitle}</p>
         </div>
       </div>
 
