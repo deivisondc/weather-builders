@@ -8,7 +8,7 @@ const mockFetchWeatherData = jest.fn();
 jest.mock('../../hooks/Weather', () => {
   return {
     useWeather: () => ({
-      hasError: false,
+      hasError: true,
       toggleModal: mockToggleModal,
       fetchWeatherData: mockFetchWeatherData,
     }),
@@ -44,7 +44,7 @@ describe('ChangeCityModal component', () => {
     );
 
     const inputComponent = getByPlaceholderText('Enter the city name');
-    const selectButtonComponent = getByText('Select');
+    const selectButtonComponent = getByText('select');
 
     fireEvent.change(inputComponent, { target: { value: 'Bauru' } });
     fireEvent.click(selectButtonComponent);
@@ -60,7 +60,7 @@ describe('ChangeCityModal component', () => {
     );
 
     const inputComponent = getByPlaceholderText('Enter the city name');
-    const selectButtonComponent = getByText('Cancel');
+    const selectButtonComponent = getByText('cancel');
 
     fireEvent.change(inputComponent, { target: { value: 'Bauru' } });
     fireEvent.click(selectButtonComponent);
@@ -68,5 +68,23 @@ describe('ChangeCityModal component', () => {
     await waitFor(() => {
       expect(mockToggleModal).toHaveBeenCalledTimes(1);
     });
+  });
+
+  it('should display erro when search for invalid city', async () => {
+    const { getByText, getByPlaceholderText } = render(
+      <ChangeCityModal isOpen />,
+    );
+
+    const inputComponent = getByPlaceholderText('Enter the city name');
+    const selectButtonComponent = getByText('select');
+
+    fireEvent.change(inputComponent, { target: { value: 'Test City 123' } });
+    fireEvent.click(selectButtonComponent);
+
+    await waitFor(() => {
+      expect(mockFetchWeatherData).toHaveBeenCalledTimes(1);
+    });
+
+    expect(getByText('City not found.')).toBeTruthy();
   });
 });

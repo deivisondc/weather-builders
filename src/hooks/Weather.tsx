@@ -49,6 +49,7 @@ interface WeatherData {
 interface WeatherContextData {
   hasError: boolean;
   weatherData: WeatherData;
+  setHasError: (value: boolean) => void;
   commitWeatherData: () => void;
   fetchWeatherData: (location: string) => Promise<void>;
   toggleModal: () => void;
@@ -180,6 +181,7 @@ export const WeatherProvider: React.FC = ({
     <WeatherContext.Provider
       value={{
         hasError,
+        setHasError,
         weatherData,
         fetchWeatherData,
         toggleModal,

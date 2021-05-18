@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { FiCheck, FiX } from 'react-icons/fi';
+import { IoCloseCircleOutline } from 'react-icons/io5';
 
 import { useWeather } from '../../hooks/Weather';
 
@@ -13,7 +14,7 @@ interface ChangeCityModalProps {
 }
 
 export default function ChangeCityModal({ isOpen }: ChangeCityModalProps) {
-  const { hasError, toggleModal, fetchWeatherData } = useWeather();
+  const { hasError, setHasError, toggleModal, fetchWeatherData } = useWeather();
 
   const [location, setLocation] = useState('');
 
@@ -30,7 +31,8 @@ export default function ChangeCityModal({ isOpen }: ChangeCityModalProps) {
   const handleRequestClose = useCallback(() => {
     setLocation('');
     toggleModal();
-  }, [toggleModal]);
+    setHasError(false);
+  }, [toggleModal, setHasError]);
 
   const handleAfterOpen = useCallback(() => {
     inputRef.current.focus();
@@ -60,15 +62,21 @@ export default function ChangeCityModal({ isOpen }: ChangeCityModalProps) {
           onChange={e => setLocation(e.target.value)}
           value={location}
         />
+        {hasError && (
+          <div className={styles.notFound}>
+            <IoCloseCircleOutline size={20} />
+            <span>City not found.</span>
+          </div>
+        )}
 
         <footer>
           <Button type="submit">
             <FiCheck size={16} />
-            Select
+            select
           </Button>
           <Button onClick={toggleModal}>
             <FiX size={16} />
-            Cancel
+            cancel
           </Button>
         </footer>
       </form>

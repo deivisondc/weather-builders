@@ -18,3 +18,14 @@
     justify-content: flex-start;
   }
 }
+
+.notFound {
+  margin-top: 0.5rem;
+
+  display: flex;
+  align-items: center;
+
+  svg {
+    margin-right: 0.5rem;
+  }
+}
