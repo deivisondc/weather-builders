@@ -56,3 +56,4 @@ The coverage is not 100% and there are some situations with Jest that I couldn't
  - 100% coverage
  - Using AsyncStorage to save the last city the user chose
  - Add [StoryBook](https://storybook.js.org/)
+ - Improve static type definitions.
